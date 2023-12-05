@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glm/glm.hpp>
+
 // Cross product function
 inline glm::vec3 cross(const glm::vec3& v1, const glm::vec3& v2)
 {
@@ -15,4 +17,16 @@ template <typename T>
 inline T lerp(const T& a, const T& b, float t)
 {
     return (a * (1 - t)) + (b * t);
+}
+
+// Dot product function
+inline float dot(const glm::vec3& v1, const glm::vec3& v2)
+{
+    return glm::dot(v1, v2);
+}
+
+//refleciton
+inline glm::vec3 reflect(const glm::vec3& v, const glm::vec3& n)
+{
+    return glm::reflect(v, n);
 }
