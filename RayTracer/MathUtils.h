@@ -30,3 +30,10 @@ inline glm::vec3 reflect(const glm::vec3& v, const glm::vec3& n)
 {
     return glm::reflect(v, n);
 }
+
+//approximately
+inline bool approximately(float value1, float value2)
+{
+    // check if the absolute difference between the values is less than epsilon
+    return (std::abs(value1 - value2) < FLT_EPSILON);
+}

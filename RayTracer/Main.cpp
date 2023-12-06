@@ -5,6 +5,7 @@
 #include "Material.h"
 #include "Sphere.h"
 #include "Random.h"
+#include "Plane.h"
  
 #include <iostream>
 #include <vector>
@@ -49,6 +50,11 @@ int main(int, char**) {
         auto sphere = std::make_unique<Sphere>(position, radius, material);
         scene.AddObject(std::move(sphere));
     }
+
+    //add a plane
+    material = std::make_shared<Lambertian>(color3_t{ 0.2f });
+    auto plane = std::make_unique<Plane>(glm::vec3{ 0, 0, 0 }, glm::vec3{ 0, 1, 0 }, material);
+    scene.AddObject(std::move(plane));
  
     // Main rendering loop
     while (true) {
