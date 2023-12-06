@@ -1,7 +1,8 @@
+#include "Ray.h"
 #include "Scene.h"
 #include "MathUtils.h"
 
-void Scene::Render(Canvas& canvas, int numSamples)
+void Scene::Render(Canvas& canvas)
 {
     for (int y = 0; y < canvas.GetSize().y; y++)
     {
@@ -13,50 +14,19 @@ void Scene::Render(Canvas& canvas, int numSamples)
 
             ray_t ray = m_camera->GetRay(point);
 
-            raycastHit_t raycastHit;
-            color3_t color = Trace(ray, 0, 100, raycastHit, m_depth);
+            color3_t color = Trace(ray);
 
             canvas.DrawPoint(pixel, color4_t(color, 1));
         }
     }
 }
 
-color3_t Scene::Trace(const ray_t& ray, float minDistance, float maxDistance, raycastHit_t& raycastHit, int depth)
+color3_t Scene::Trace(const ray_t& ray)
 {
-    bool rayHit = false;
-    float closestDistance = maxDistance;
-
-    for (const auto& object : m_objects)
-    {
-        if (object->Hit(ray, minDistance, closestDistance, raycastHit))
-        {
-            rayHit = true;
-            closestDistance = raycastHit.distance;
-        }
-    }
-
-    // if ray hit object, scatter (bounce) ray and check for next hit
-    if (rayHit)
-    {
-        ray_t scattered;
-        color3_t color;
-
-        // check if maximum depth (number of bounces) is reached, get color from material and scattered ray
-        if (depth > 0 && raycastHit.material->Scatter(ray, raycastHit, color, scattered))
-        {
-            // recursive function, call self and modulate (multiply) colors of depth bounces
-            return color * Trace(scattered, minDistance, maxDistance, raycastHit, depth - 1);
-        }
-        else
-        {
-            // reached maximum depth of bounces (color is black)
-            return color3_t{ 0, 0, 0 };
-        }
-    }
-
-    // if ray not hit, return scene sky color
     glm::vec3 direction = glm::normalize(ray.direction);
-    float t = (direction.y + 1) * 0.5f; // direction.y (-1 <-> 1) => (0 <-> 1)
+
+    // set scene sky color
+    float t = (direction.y + 1) * 0.5f;
     color3_t color = lerp(m_bottomColor, m_topColor, t);
 
     return color;
