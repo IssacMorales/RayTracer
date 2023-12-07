@@ -1,7 +1,9 @@
 #include "Scene.h"
 #include "MathUtils.h"
+#include <iostream>
+#include <iomanip>
 
-void Scene::Render(Canvas& canvas, int numSamples)
+void Scene::Render(Canvas& canvas, int numSamples, int depth)
 {
     for (int y = 0; y < canvas.GetSize().y; y++)
     {
@@ -14,10 +16,11 @@ void Scene::Render(Canvas& canvas, int numSamples)
             ray_t ray = m_camera->GetRay(point);
 
             raycastHit_t raycastHit;
-            color3_t color = Trace(ray, 0, 100, raycastHit, m_depth);
+            color3_t color = Trace(ray, 0, 100, raycastHit, depth);
 
             canvas.DrawPoint(pixel, color4_t(color, 1));
         }
+        std::cout << std::setprecision(2) << std::setw(5) << ((y / (float)canvas.GetSize().y) * 100) << "%\n";
     }
 }
 
