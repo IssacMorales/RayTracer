@@ -3,6 +3,8 @@
 #include "Object.h" 
 #include <glm/glm.hpp>
 
+class Material;
+
 class Sphere : public Object
 {
 public:
